@@ -29,11 +29,13 @@ def to_url(url,chars):
 	print(">>> Renseigner la range voulue au format chiffre;chiffre")
 	_range = input("")
 	_range = _range.split(";")
+	print()
+	print("#### DEBUT DU FUZZING URL ####")
 	for length in range(int(_range[0]), int(_range[1])+1):
 		#intégrer ici le multi-threading?? 
 		list_fuzzing = product(chars, repeat=length)
 		for fuzzing in list_fuzzing:
-			print((''.join(fuzzing)))
-			url = url.replace('FUZZ',(''.join(fuzzing)))
-			__requests__.if_page_exist(url)
-
+			#print((''.join(fuzzing)))
+			url_tmp = url.replace("FUZZ", (''.join(fuzzing)))
+			__requests__.if_page_exist(url_tmp)
+	print("#### FIN DU FUZZING URL ####")

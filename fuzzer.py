@@ -118,15 +118,16 @@ if __name__ == "__main__":
 	######### Seconde chose : afficher le niveau fuzzing en temrme de charset #########
 	charset = menu() 
 
-	###### TEST TO REMOVE ########
+	###### IF URL IN ARGS : #######
 	if arguments["url"] != "":
 		if "FUZZ" in arguments["url"]:
 			__iterations__.to_url(arguments["url"],charset)
 		else:
-			print("Indiquer FUZZ dans l'URL à fuzzer")
+			print("Usage : http://url/FUZZ to FUZZ in URL")
+			exit()
 
 
-	### 
+	###### IF --IMPORT test des imports ######
 	if arguments["modules"] != "":
 		if isinstance(arguments["modules"], str):
 			handle_module(arguments["modules"])
@@ -137,7 +138,7 @@ if __name__ == "__main__":
 	#on va maintenant tester chaque option qu'on a reçu et utiliser les fonctions en conséquence 
 	if  arguments["destination_file"] != "":
 		#Obtention du choix de l'utilisateur et donc du charset en conséquence
-		iteration_mdp(arguments["destination_file"],charset)
+		__iterations__.to_file(arguments["destination_file"],charset)
 
 
 
