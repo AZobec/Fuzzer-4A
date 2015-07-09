@@ -18,6 +18,8 @@ import sys
 import imp
 import requests
 import os
+from modules import __requests__
+from modules import __iterations__
 
 file_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -57,39 +59,28 @@ def menu():
 		return "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#=!+-_ /:|"
 #fin de la fonction menu
 
-#Creation de la fonction itérative qui va envoyer les résultats de l'itération dans un fichier
-def iteration_mdp(destination,chars):
-	_file = open(destination,"wb")
-	print(">>> Renseigner la range voulue au format chiffre;chiffre")
-	_range = input("")
-	_range = _range.split(";")
-	for length in range(int(_range[0]), int(_range[1])+1):
-		#intégrer ici le multi-threading?? 
-		list_fuzzing = product(chars, repeat=length)
-		for fuzzing in list_fuzzing:
-			print((''.join(fuzzing)))
-			_file.write(bytes((''.join(fuzzing)),'UTF-8'))
-			_file.write(bytes(("\n"),'UTF-8'))
-	#On ferme proprement les fichier
-	_file.close()
+
 
 #Fin de la fonction iteration_mdp(destination):
 
 #début du main
 if __name__ == "__main__":
 	
-	destination_file = ""
-	dictionnaire = ""
-	HOST = ""
-	PORT = ""
-	modules = ""	
-	url = ""
-	post = ""
+	arguments = dict()
 
-	#parser d'options
+	arguments["destination_file"] = ""
+	arguments["dictionnaire"] = ""
+	arguments["HOST"] = ""
+	arguments["PORT"] = ""
+	arguments["modules"] = ""	
+	arguments["url"] = ""
+	arguments["post"] = ""
+
+	
+	############ DEBUT GESTION DES ARGUMENTS ############
+
 	parser = optparse.OptionParser()
 
-	#gestion du file
 	parser.add_option("-f", "--file", dest = 'dictionnaire', help = "Choix d'un dictionnaire", metavar = "FILE", default = False)
 	parser.add_option("-H", "--host", dest = 'HOST', help = "Choix du serveur à attaquer", metavar = "SERVER", default = False)
 	parser.add_option("-w", "--write", dest = 'destination_file', help = "Output des datas", metavar = "FILE", default = False)
@@ -101,40 +92,52 @@ if __name__ == "__main__":
 	options,args = parser.parse_args()
 
 	if options.destination_file != False:
-		destination_file = options.destination_file
+		arguments["destination_file"] = options.destination_file
 	if options.dictionnaire != False:
-		dictionnaire = options.dictionnaire
+		arguments["dictionnaire"] = options.dictionnaire
 	if options.HOST != False :
-		HOST = options.HOST
+		arguments["HOST"] = options.HOST
 	if options.port != False:
-		PORT = int(options.port)
+		arguments["PORT"] = int(options.port)
 	if options.modules != False:
-		modules = options.modules
-		if "," in modules:
-				modules = modules.split(",")
-				for j in modules:
-						print (j)
+		arguments["modules"] = options.modules
+		if "," in arguments["modules"]:
+				arguments["modules"] = arguments["modules"].split(",")
 	if options.url != False:
-		url = options.url
+		arguments["url"] = options.url
 	if options.post != False:
-		post = options.post
+		arguments["post"] = options.post
 
+	############ FIN DE GESTION DES ARGUMENTS ###############
+
+	######### Premier test : savoir si des arguments sont présents #########
 	if len(sys.argv)==1:
 		parser.print_help()
 		exit()
 
-	if modules != "":
-		if isinstance(modules, str):
-			handle_module(modules)
+	######### Seconde chose : afficher le niveau fuzzing en temrme de charset #########
+	charset = menu() 
+
+	###### TEST TO REMOVE ########
+	if arguments["url"] != "":
+		if "FUZZ" in arguments["url"]:
+			__iterations__.to_url(arguments["url"],charset)
 		else:
-			for j in modules:
+			print("Indiquer FUZZ dans l'URL à fuzzer")
+
+
+	### 
+	if arguments["modules"] != "":
+		if isinstance(arguments["modules"], str):
+			handle_module(arguments["modules"])
+		else:
+			for j in arguments["modules"]:
 				handle_module(j)
 
 	#on va maintenant tester chaque option qu'on a reçu et utiliser les fonctions en conséquence 
-	if  destination_file!= "":
-		charset = menu() #Obtention du choix de l'utilisateur et donc du charset en conséquence
-		print(charset)
-		iteration_mdp(destination_file,charset)
+	if  arguments["destination_file"] != "":
+		#Obtention du choix de l'utilisateur et donc du charset en conséquence
+		iteration_mdp(arguments["destination_file"],charset)
 
 
 
