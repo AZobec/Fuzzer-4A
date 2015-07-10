@@ -1,7 +1,7 @@
 # Fuzzer-4A
 
 ## Qu'est-ce que c'est ?
-C'est le projet de Python de Master 1 4ASI2 de Fuzzer Web par :
+C'est le projet de Python de 4ASI2 de Fuzzer Web par :
 
 - Alexandre G
 - Arnaud ZOBEC
