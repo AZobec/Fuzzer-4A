@@ -31,7 +31,7 @@ def to_url_wordlist(url):
 	wordlist = dict()
 	wordlist["general_wl"] = "./wordlist/general"
 	wordlist["vulns_wl"] = "./wordlist/vulns"
-	wordlist["injections_wl"] = "./wordlist/injections"
+	#wordlist["injections_wl"] = "./wordlist/Injections"
 	wordlist["webservicces_wl"] = "./wordlist/webservicces"
 	for key in wordlist.keys():
 		for txt_file in listdir(wordlist[key]):
