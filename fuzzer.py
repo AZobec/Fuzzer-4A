@@ -87,7 +87,7 @@ if __name__ == "__main__":
 	parser.add_option("-p", "--port", dest = 'port', help = "Choix du port", metavar = "PORT", default = False)
 	parser.add_option("-i", "--import", dest = 'modules', help = "Modules à importer séparés par une virgule", metavar = "IMPORT", default = False)
 	parser.add_option("-u", "--url", dest = 'url', help = "URL à cibler, avec FUZZ comme directory à injecter", metavar = "URL", default = False)
-	parser.add_option("-P", "--POST", dest = 'post', help = "Méthode POST à injecter, avec FUZZ comme indication", metavar = "POST", default = False)
+	parser.add_option("-P", "--POST", dest = 'post', help = "Méthode POST à injecter, sans espace : user=FUZZ,pass=FUZZ", metavar = "POST", default = False)
 	
 	options,args = parser.parse_args()
 
@@ -122,9 +122,13 @@ if __name__ == "__main__":
 	if arguments["url"] != "":
 		if "FUZZ" in arguments["url"]:
 			__iterations__.to_url(arguments["url"],charset)
+		#ici : la méthode post + url sans FUZZ
+		elif arguments["post"] != "":
+			__iterations__.to_post(arguments["url"],arguments["post"],charset)
 		else:
-			print("Usage : http://url/FUZZ to FUZZ in URL")
+			print("Usage : http://example.com/FUZZ to fuzz url")
 			exit()
+			
 
 
 	###### IF --IMPORT test des imports ######

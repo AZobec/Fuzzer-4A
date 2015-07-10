@@ -13,6 +13,18 @@ def if_page_exist(url):
 		return 0
 	else:
 		return 1
+def if_post(url,post):
+	payload = dict()
+	all_posts = post.split(",")
+	for champ in all_posts:
+		option, value= champ.split('=',1)
+		payload[option]=value
+	r = requests.post(url, data=payload)
+	if r.status_code == requests.codes.ok:
+		print("Cette page existe : "+url)
+		return 0
+	else:
+		return 1
 
 def __init__():
-	print("Merci de modifier directement les fonctions de ce module.")
+	print("Module Natif. Modifiez directement les fonctions du module __requests__.py")

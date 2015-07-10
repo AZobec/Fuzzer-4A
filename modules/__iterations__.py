@@ -39,3 +39,39 @@ def to_url(url,chars):
 			url_tmp = url.replace("FUZZ", (''.join(fuzzing)))
 			__requests__.if_page_exist(url_tmp)
 	print("#### FIN DU FUZZING URL ####")
+
+
+def to_post(url,post,chars):
+	print(">>> Renseigner la range voulue au format chiffre;chiffre")
+	_range = input("")
+	_range = _range.split(";")
+	list_fuzzing_deux = []
+	print()
+	print("#### DEBUT DU FUZZING POST METHOD ####")
+	post_tmp = post
+	for length in range(int(_range[0]), int(_range[1])+1):
+		#intégrer ici le multi-threading?? 
+		list_fuzzing = product(chars, repeat=length)
+		list_fuzzing_deux = product(chars, repeat=length)
+
+		if post.count("FUZZ") == 2:		
+			for fuzzing in list_fuzzing:
+				post_tmp = post.replace("FUZZ", (''.join(fuzzing)),1)
+				for fuzzing_deux in list_fuzzing_deux:
+					post_tmp_deux = post_tmp.replace("FUZZ", (''.join(fuzzing_deux)))
+					list_fuzzing_deux = product(chars, repeat=length)
+					__requests__.if_post(url,post_tmp_deux)
+					print (post_tmp_deux)
+
+	print("#### FIN DU FUZZING POST METHOD ####")
+
+
+def __init__():
+	print("Module Natif. Modifiez directement les fonctions du module __iterations__.py")
+
+
+
+	#####     user=FUZZ,pass=FUZZ
+	##### 	  user=a,pass=a
+	##### 	  user=b,pass=a
+	##### 			....
