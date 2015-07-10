@@ -3,7 +3,7 @@
 ## Qu'est-ce que c'est ?
 C'est le projet de Python de 4ASI2 de Fuzzer Web par :
 
-- Alexandre G
+- Alexandre GRAU
 - Arnaud ZOBEC
 
 ## Qu'est-ce qu'il fait ?
