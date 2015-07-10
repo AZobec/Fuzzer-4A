@@ -25,12 +25,22 @@ def to_file(destination,chars):
 	#On ferme proprement les fichier
 	_file.close()
 
-def to_url(url,chars):
+def to_url_wordlist(url):
+	print("#### DEBUT TEST WORDLIST admin-panels ####")
+	_file = open("./wordlist/general/admin-panels.txt")
+	for line in _file.readlines():
+		url_tmp = url.replace("FUZZ", line[:-1])
+		__requests__.if_page_exist(url_tmp)
+		#print(url_tmp)
+	print("#### FIN TEST WORDLIST admin-panels ####")
+	_file.close()
+
+def to_url_bruteforce(url,chars):
 	print(">>> Renseigner la range voulue au format chiffre;chiffre")
 	_range = input("")
 	_range = _range.split(";")
 	print()
-	print("#### DEBUT DU FUZZING URL ####")
+	print("#### DEBUT DU BRUTEFORCE URL ####")
 	for length in range(int(_range[0]), int(_range[1])+1):
 		#intégrer ici le multi-threading?? 
 		list_fuzzing = product(chars, repeat=length)
@@ -38,7 +48,7 @@ def to_url(url,chars):
 			#print((''.join(fuzzing)))
 			url_tmp = url.replace("FUZZ", (''.join(fuzzing)))
 			__requests__.if_page_exist(url_tmp)
-	print("#### FIN DU FUZZING URL ####")
+	print("#### FIN DU BRUTEFORCE URL ####")
 
 
 def to_post(url,post,chars):
@@ -47,7 +57,7 @@ def to_post(url,post,chars):
 	_range = _range.split(";")
 	list_fuzzing_deux = []
 	print()
-	print("#### DEBUT DU FUZZING POST METHOD ####")
+	print("#### DEBUT DU BRUTEFORCE POST METHOD ####")
 	post_tmp = post
 	for length in range(int(_range[0]), int(_range[1])+1):
 		#intégrer ici le multi-threading?? 
@@ -63,15 +73,8 @@ def to_post(url,post,chars):
 					__requests__.if_post(url,post_tmp_deux)
 					print (post_tmp_deux)
 
-	print("#### FIN DU FUZZING POST METHOD ####")
+	print("#### FIN DU BRUTEFORCE POST METHOD ####")
 
 
 def __init__():
 	print("Module Natif. Modifiez directement les fonctions du module __iterations__.py")
-
-
-
-	#####     user=FUZZ,pass=FUZZ
-	##### 	  user=a,pass=a
-	##### 	  user=b,pass=a
-	##### 			....

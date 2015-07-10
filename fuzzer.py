@@ -35,27 +35,24 @@ def handle_module(called_module):
 
 
 #on va demander au client la range qu'il veut taper, s'il veut faire que des minuscules ou pas, etc...
-def menu():
-	print("-_-_-_-_-_-Bienvenue dans le Fuzzer web-_-_-_-_-_-")
-	print(">>> Quel type de données voulez-vous tenter d'injecter")
-	print(">>> Tapez 1 pour : minuscules seulement")
-	print(">>> Tapez 2 pour : MAJUSCULES seulement")
-	print(">>> Tapez 3 pour : ch1ffr35 seulement")
-	print(">>> Tapez 4 pour : minuscules + MAJUSCULES")
-	print(">>> Tapez 5 pour : minuscules + MAJUSCULES + ch1ffr35 ")
-	print(">>> Tapez 6 pour : minuscules + MAJUSCULES + ch1ffr35 + c@ractères spéci@ux")
-	test_user = input("")
+def menu(test_user):
 	if test_user == "1":
+		print(">>> Niveau du bruteforce : min")
 		return "abcdefghijklmnopqrstuvwxyz"
 	if test_user == "2":
+		print(">>> Niveau du bruteforce : maj")
 		return "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	if test_user == "3":
+		print(">>> Niveau du bruteforce : chiffres")
 		return "0123456789"
 	if test_user == "4":
+		print(">>> Niveau du bruteforce : min + maj")
 		return "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	if test_user == "5":
+		print(">>> Niveau du bruteforce : min + maj + chiffres")
 		return "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	if test_user == "6":
+		print(">>> Niveau du bruteforce : min + maj + chiffres + special")
 		return "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#=!+-_ /:|"
 #fin de la fonction menu
 
@@ -75,6 +72,7 @@ if __name__ == "__main__":
 	arguments["modules"] = ""	
 	arguments["url"] = ""
 	arguments["post"] = ""
+	arguments["level"] = ""
 
 	
 	############ DEBUT GESTION DES ARGUMENTS ############
@@ -88,7 +86,9 @@ if __name__ == "__main__":
 	parser.add_option("-i", "--import", dest = 'modules', help = "Modules à importer séparés par une virgule", metavar = "IMPORT", default = False)
 	parser.add_option("-u", "--url", dest = 'url', help = "URL à cibler, avec FUZZ comme directory à injecter", metavar = "URL", default = False)
 	parser.add_option("-P", "--POST", dest = 'post', help = "Méthode POST à injecter, sans espace : user=FUZZ,pass=FUZZ", metavar = "POST", default = False)
-	
+	parser.add_option("-l", "--level", dest = 'level', help = "Level du bruteforcing(chars) (de 1 à 6) 0 pour false", metavar = "LEVEL", default = False)
+
+
 	options,args = parser.parse_args()
 
 	if options.destination_file != False:
@@ -107,6 +107,12 @@ if __name__ == "__main__":
 		arguments["url"] = options.url
 	if options.post != False:
 		arguments["post"] = options.post
+	if options.level != False:
+		arguments["level"] = options.level
+	if options.level == "0":
+		arguments["level"] = False
+	if options.level == False:
+		arguments["level"] = False
 
 	############ FIN DE GESTION DES ARGUMENTS ###############
 
@@ -115,18 +121,30 @@ if __name__ == "__main__":
 		parser.print_help()
 		exit()
 
+	#Message de bienvenue : 
+	print("___________                                             _____    _____   ")
+	print("\_   _____/_ __________________ ___________            /  |  |  /  _  \  ")
+	print(" |    __)|  |  \___   /\___   // __ \_  __ \  ______  /   |  |_/  /_\  \  ")
+	print(" |     \ |  |  //    /  /    /\  ___/|  | \/ /_____/ /    ^   /    |    \ ")
+	print(" \___  / |____//_____ \/_____ \\\\___  >__|            \____   |\____|__  / ")
+	print("     \/              \/      \/    \/                     |__|        \/ 	")
+	print()
+
 	######### Seconde chose : afficher le niveau fuzzing en temrme de charset #########
-	charset = menu() 
+	charset = menu(arguments["level"]) 
 
 	###### IF URL IN ARGS : #######
 	if arguments["url"] != "":
 		if "FUZZ" in arguments["url"]:
-			__iterations__.to_url(arguments["url"],charset)
-		#ici : la méthode post + url sans FUZZ
+			__iterations__.to_url_wordlist(arguments["url"])
+			if arguments["level"] != False:
+				__iterations__.to_url_bruteforce(arguments["url"],charset)
+		#ici : la méthode post + url sans FUZZ d'URL pur
 		elif arguments["post"] != "":
 			__iterations__.to_post(arguments["url"],arguments["post"],charset)
 		else:
-			print("Usage : http://example.com/FUZZ to fuzz url")
+			print("Usage : ./fuzzer.py -u http://foo.bar/FUZZ to fuzz url")
+			print("Usage : ./fuzzer.py -u http://foo.bar/ --POST user=FUZZ,pass=FUZZ")
 			exit()
 			
 
