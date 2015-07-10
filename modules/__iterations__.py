@@ -8,6 +8,8 @@ from optparse import OptionParser
 import optparse
 import imp
 from modules import __requests__
+from os import listdir
+from os.path import isfile, join
 
 #Creation de la fonction itérative qui va envoyer les résultats de l'itération dans un fichier (un dictionnaire gratos !!)
 def to_file(destination,chars):
@@ -26,14 +28,23 @@ def to_file(destination,chars):
 	_file.close()
 
 def to_url_wordlist(url):
-	print("#### DEBUT TEST WORDLIST admin-panels ####")
-	_file = open("./wordlist/general/admin-panels.txt")
-	for line in _file.readlines():
-		url_tmp = url.replace("FUZZ", line[:-1])
-		__requests__.if_page_exist(url_tmp)
-		#print(url_tmp)
-	print("#### FIN TEST WORDLIST admin-panels ####")
-	_file.close()
+	wordlist = dict()
+	wordlist["general_wl"] = "./wordlist/general"
+	wordlist["vulns_wl"] = "./wordlist/vulns"
+	wordlist["injections_wl"] = "./wordlist/injections"
+	wordlist["webservicces_wl"] = "./wordlist/webservicces"
+	for key in wordlist.keys():
+		for txt_file in listdir(wordlist[key]):
+			if isfile(join(wordlist[key],txt_file)):
+				print ("#### DEBUT TEST WORDLIST "+txt_file+" ####")
+				_file = open(wordlist[key]+"/"+txt_file)
+				for line in _file.readlines():
+					url_tmp = url.replace("FUZZ", line[:-1])
+					__requests__.if_page_exist(url_tmp)
+					#print(url_tmp)
+				print ("#### FIN TEST WORDLIST "+txt_file+" ####")
+				_file.close()
+
 
 def to_url_bruteforce(url,chars):
 	print(">>> Renseigner la range voulue au format chiffre;chiffre")
