@@ -18,8 +18,8 @@ def if_page_exist(url):
 		print(">>> Requete TimeOut")
 	except requests.exceptions.TooManyRedirects:
 		print(">>> TooManyRedirects")
-	except requests.exceptions.RequestException as e:
-		print (e)
+	except requests.exceptions.RequestException:
+		pass
 
 def if_post(url,post):
 	payload = dict()
