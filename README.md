@@ -15,7 +15,10 @@ C'est le projet de Python de 4ASI2 de Fuzzer Web par :
 
 ## Comment il fonctionne?
 
-Il suffit de faire un git clone et de lancer ./fuzzer.py
+Il suffit de faire :
+	
+	git clone https://github.com/AZobec/Fuzzer-4A.git
+	./fuzzer.py -h
 
 ### Options
 
